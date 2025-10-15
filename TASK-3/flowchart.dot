@@ -6,18 +6,18 @@ digraph HastaneSistemi {
     Menu [label="Ana Menü\n1 - Randevu Al\n2 - Tahlil Sonucu Gör", shape=diamond];
 
     // Randevu Modülü
-    KimlikR [label="Kimlik Doğrulama", shape=diamond];
+    KimlikR [label="Kimlik Doğrulama"];
     Poliklinik [label="Poliklinik Seçimi"];
     Doktor [label="Doktor Listesi"];
     Saatler [label="Uygun Saatleri Göster"];
-    Onay [label="Randevu Onayı", shape=diamond];
+    Onay [label="Randevu Onayı"];
     SMS [label="SMS Gönder"];
     HataR [label="Kimlik doğrulama başarısız", color=red];
 
     // Tahlil Modülü
-    KimlikT [label="Kimlik Doğrulama", shape=diamond];
-    TahlilVar [label="Tahlil Var mı?", shape=diamond];
-    SonucHazir [label="Sonuç Hazır mı?", shape=diamond];
+    KimlikT [label="Kimlik Doğrulama"];
+    TahlilVar [label="Tahlil Var mı?"];
+    SonucHazir [label="Sonuç Hazır mı?"];
     Goruntule [label="Sonucu Görüntüle"];
     PDF [label="PDF İndir"];
     Bekle [label="Sonuç hazır değil", color=orange];
@@ -28,22 +28,20 @@ digraph HastaneSistemi {
     Menu -> KimlikR [label="1"];
     Menu -> KimlikT [label="2"];
 
-    // Randevu Modülü Akışı
-    KimlikR -> Poliklinik [label="Doğru"];
-    KimlikR -> HataR [label="Yanlış"];
+    // Randevu Modülü Akışı (alt alta)
+    KimlikR -> Poliklinik;
     Poliklinik -> Doktor;
     Doktor -> Saatler;
     Saatler -> Onay;
-    Onay -> SMS [label="Onaylandı"];
-    Onay -> HataR [label="Başarısız"];
+    Onay -> SMS;
+    KimlikR -> HataR [style=dashed];
 
-    // Tahlil Modülü Akışı
-    KimlikT -> TahlilVar [label="Doğru"];
-    KimlikT -> HataT [label="Yanlış"];
+    // Tahlil Modülü Akışı (alt alta)
+    KimlikT -> TahlilVar;
     TahlilVar -> SonucHazir [label="Var"];
     TahlilVar -> Yok [label="Yok"];
     SonucHazir -> Goruntule [label="Hazır"];
     SonucHazir -> Bekle [label="Bekle"];
     Goruntule -> PDF;
+    KimlikT -> HataT [style=dashed];
 }
-
