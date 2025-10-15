@@ -1,40 +1,34 @@
 digraph HastaneSistemi {
-    rankdir=TB;
-    node [shape=box];
+    rankdir=TB; // Üstten alta akış
+    node [shape=box, style=rounded];
 
-    subgraph cluster_menu {
-        label="Ana Menü";
-        Menu [label="Ana Menü\n1-Randevu Al\n2-Tahlil Sonucu Gör", shape=diamond];
-    }
+    // Ana Menü
+    Menu [label="Ana Menü\n1 - Randevu Al\n2 - Tahlil Sonucu Gör", shape=diamond];
 
-    subgraph cluster_randevu {
-        label="Modül 1: Randevu Alma";
-        KimlikR [label="Kimlik Doğrulama", shape=diamond];
-        Poliklinik [label="Poliklinik Seçimi"];
-        Doktor [label="Doktor Listesi Göster"];
-        Saatler [label="Uygun Saatleri Göster"];
-        Onay [label="Randevu Onayı", shape=diamond];
-        SMS [label="SMS Gönder"];
-        HataR [label="Kimlik doğrulama başarısız", shape=box, color=red];
-    }
+    // Randevu Modülü
+    KimlikR [label="Kimlik Doğrulama", shape=diamond];
+    Poliklinik [label="Poliklinik Seçimi"];
+    Doktor [label="Doktor Listesi"];
+    Saatler [label="Uygun Saatleri Göster"];
+    Onay [label="Randevu Onayı", shape=diamond];
+    SMS [label="SMS Gönder"];
+    HataR [label="Kimlik doğrulama başarısız", color=red];
 
-    subgraph cluster_tahlil {
-        label="Modül 2: Tahlil Sonuçları";
-        KimlikT [label="Kimlik Doğrulama", shape=diamond];
-        TahlilVar [label="Tahlil Var mı?", shape=diamond];
-        SonucHazir [label="Sonuç Hazır mı?", shape=diamond];
-        Goruntule [label="Sonucu Görüntüle"];
-        PDF [label="PDF İndir"];
-        HataT [label="Kimlik doğrulama başarısız", shape=box, color=red];
-        Bekle [label="Sonuç hazır değil", shape=box, color=orange];
-        Yok [label="Tahlil bulunamadı", shape=box, color=orange];
-    }
+    // Tahlil Modülü
+    KimlikT [label="Kimlik Doğrulama", shape=diamond];
+    TahlilVar [label="Tahlil Var mı?", shape=diamond];
+    SonucHazir [label="Sonuç Hazır mı?", shape=diamond];
+    Goruntule [label="Sonucu Görüntüle"];
+    PDF [label="PDF İndir"];
+    Bekle [label="Sonuç hazır değil", color=orange];
+    Yok [label="Tahlil bulunamadı", color=orange];
+    HataT [label="Kimlik doğrulama başarısız", color=red];
 
-    // Ana Menü bağlantıları
+    // Ana Menü -> Modüller
     Menu -> KimlikR [label="1"];
     Menu -> KimlikT [label="2"];
 
-    // Randevu modülü bağlantıları
+    // Randevu Modülü Akışı
     KimlikR -> Poliklinik [label="Doğru"];
     KimlikR -> HataR [label="Yanlış"];
     Poliklinik -> Doktor;
@@ -43,7 +37,7 @@ digraph HastaneSistemi {
     Onay -> SMS [label="Onaylandı"];
     Onay -> HataR [label="Başarısız"];
 
-    // Tahlil modülü bağlantıları
+    // Tahlil Modülü Akışı
     KimlikT -> TahlilVar [label="Doğru"];
     KimlikT -> HataT [label="Yanlış"];
     TahlilVar -> SonucHazir [label="Var"];
@@ -52,3 +46,4 @@ digraph HastaneSistemi {
     SonucHazir -> Bekle [label="Bekle"];
     Goruntule -> PDF;
 }
+
