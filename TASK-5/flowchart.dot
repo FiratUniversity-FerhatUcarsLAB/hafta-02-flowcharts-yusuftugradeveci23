@@ -1,0 +1,56 @@
+digraph AkilliEvGuvenlikSistemi {
+  rankdir=TB;
+  node [shape=box, style=rounded, fontname="Helvetica", fontsize=11];
+  edge [fontname="Helvetica", fontsize=10];
+
+  // --- Düğümler ---
+  BASLA [shape=ellipse, label="BAŞLA"];
+  INIT [label="Sistemi Başlat (InitializeSystem)"];
+  CHECK_SYSTEM [shape=diamond, label="Sistem aktif mi?"];
+  SENSOR_READ [label="Sensörleri Oku:\nHareket, Kapı/Pencere, Kamera"];
+  CHECK_THREAT [shape=diamond, label="Tehdit Algılandı mı?"];
+  CHECK_OWNER [shape=diamond, label="Ev Sahibi Evde mi?\n(Yanlış alarm kontrolü)"];
+  DETERMINE_LEVEL [label="Alarm Seviyesini Belirle\n(1-Düşük, 2-Orta, 3-Yüksek)"];
+  ACTIVATE_ALARM [label="Alarmı Aktive Et\n(Siren / Işık)"];
+  CAMERA_CHECK [shape=diamond, label="Kamera Aktif Edilsin mi?"];
+  CAMERA_ON [label="Kamera Kaydını Başlat"];
+  SEND_NOTIFICATION [label="Bildirim Gönder:\nSMS + Uygulama + E-posta"];
+  WAIT_RESET [shape=diamond, label="Alarm Sıfırlandı mı?"];
+  ADJUST_ALARM [label="Alarm Seviyesini Güncelle"];
+  DEACTIVATE [label="Alarmı ve Kamerayı Durdur"];
+  LOG_EVENT [label="Olayı Kaydet (Loglama)"];
+  SLEEP [label="Bekle (MainLoopInterval)"];
+  LOOP_BACK [label="Sensörleri Yeniden Kontrol Et"];
+  BITIR [shape=ellipse, label="BİTİR"];
+
+  // --- Akış ---
+  BASLA -> INIT -> CHECK_SYSTEM;
+  CHECK_SYSTEM -> SENSOR_READ [label="Evet"];
+  CHECK_SYSTEM -> BITIR [label="Hayır"];
+
+  SENSOR_READ -> CHECK_THREAT;
+  CHECK_THREAT -> LOG_EVENT [label="Hayır"];
+  CHECK_THREAT -> CHECK_OWNER [label="Evet"];
+
+  CHECK_OWNER -> DETERMINE_LEVEL;
+  DETERMINE_LEVEL -> ACTIVATE_ALARM;
+  ACTIVATE_ALARM -> CAMERA_CHECK;
+  CAMERA_CHECK -> CAMERA_ON [label="Evet"];
+  CAMERA_CHECK -> SEND_NOTIFICATION [label="Hayır"];
+  CAMERA_ON -> SEND_NOTIFICATION;
+
+  SEND_NOTIFICATION -> WAIT_RESET;
+  WAIT_RESET -> ADJUST_ALARM [label="Hayır"];
+  WAIT_RESET -> DEACTIVATE [label="Evet"];
+
+  ADJUST_ALARM -> SEND_NOTIFICATION [label="Yeni Seviye"];
+  ADJUST_ALARM -> WAIT_RESET [label="Tekrar Kontrol"];
+
+  DEACTIVATE -> LOG_EVENT;
+  LOG_EVENT -> SLEEP;
+  SLEEP -> LOOP_BACK;
+  LOOP_BACK -> SENSOR_READ [label="Ana döngü devam eder"];
+
+  // --- Görsel düzen ---
+  { rank = same; CHECK_THREAT; CHECK_OWNER; DETERMINE_LEVEL; }
+}
