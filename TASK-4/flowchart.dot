@@ -1,0 +1,53 @@
+digraph DersKayitSistemi {
+    rankdir=TB;
+    node [shape=rectangle, fontname="Arial", fontsize=10];
+
+    BASLA [label="BAŞLA", shape=ellipse];
+    GIRIS [label="Öğrenci No + Şifre Girişi"];
+    GIRIS_KONTROL [label="Giriş Bilgileri Doğru mu?", shape=diamond];
+    DERS_LISTE [label="Ders Listesini Görüntüle (Döngü)"];
+    DERS_SECIM [label="Ders Seçimi Yapıldı mı?", shape=diamond];
+    KONTENJAN [label="Kontenjan Uygun mu?", shape=diamond];
+    ONKOSUL [label="Önkoşul Dersi Alınmış mı?", shape=diamond];
+    ZAMAN [label="Zaman Çakışması Var mı?", shape=diamond];
+    KREDI [label="Toplam Kredi + Ders Kredisi ≤ 35 ?", shape=diamond];
+    EKLE [label="Dersi Ekle"];
+    MESAJ_HATA [label="Uygun Olmayan Durum Mesajı Göster"];
+    DERS_CIKAR [label="Ders Çıkarma (Döngü)"];
+    GPA_KONTROL [label="GPA < 2.5 ?", shape=diamond];
+    DANISMAN [label="Danışman Onayı Gerekli"];
+    BASARILI [label="Kayıt Başarılı"];
+    HATA [label="Giriş Bilgileri Hatalı"];
+    BITIR [label="BİTİR", shape=ellipse];
+
+    BASLA -> GIRIS -> GIRIS_KONTROL;
+    GIRIS_KONTROL -> DERS_LISTE [label="Evet"];
+    GIRIS_KONTROL -> HATA [label="Hayır"];
+    HATA -> BITIR;
+
+    DERS_LISTE -> DERS_SECIM;
+    DERS_SECIM -> KONTENJAN [label="Evet"];
+    DERS_SECIM -> DERS_CIKAR [label="Hayır"];
+
+    KONTENJAN -> ONKOSUL [label="Evet"];
+    KONTENJAN -> MESAJ_HATA [label="Hayır"];
+
+    ONKOSUL -> ZAMAN [label="Evet"];
+    ONKOSUL -> MESAJ_HATA [label="Hayır"];
+
+    ZAMAN -> KREDI [label="Hayır"];
+    ZAMAN -> MESAJ_HATA [label="Evet"];
+
+    KREDI -> EKLE [label="Evet"];
+    KREDI -> MESAJ_HATA [label="Hayır"];
+
+    EKLE -> DERS_SECIM;
+    MESAJ_HATA -> DERS_SECIM;
+    DERS_CIKAR -> GPA_KONTROL;
+
+    GPA_KONTROL -> DANISMAN [label="Evet"];
+    GPA_KONTROL -> BASARILI [label="Hayır"];
+
+    DANISMAN -> BITIR;
+    BASARILI -> BITIR;
+}
