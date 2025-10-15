@@ -1,0 +1,54 @@
+digraph HastaneSistemi {
+    rankdir=TB;
+    node [shape=box];
+
+    subgraph cluster_menu {
+        label="Ana Menü";
+        Menu [label="Ana Menü\n1-Randevu Al\n2-Tahlil Sonucu Gör", shape=diamond];
+    }
+
+    subgraph cluster_randevu {
+        label="Modül 1: Randevu Alma";
+        KimlikR [label="Kimlik Doğrulama", shape=diamond];
+        Poliklinik [label="Poliklinik Seçimi"];
+        Doktor [label="Doktor Listesi Göster"];
+        Saatler [label="Uygun Saatleri Göster"];
+        Onay [label="Randevu Onayı", shape=diamond];
+        SMS [label="SMS Gönder"];
+        HataR [label="Kimlik doğrulama başarısız", shape=box, color=red];
+    }
+
+    subgraph cluster_tahlil {
+        label="Modül 2: Tahlil Sonuçları";
+        KimlikT [label="Kimlik Doğrulama", shape=diamond];
+        TahlilVar [label="Tahlil Var mı?", shape=diamond];
+        SonucHazir [label="Sonuç Hazır mı?", shape=diamond];
+        Goruntule [label="Sonucu Görüntüle"];
+        PDF [label="PDF İndir"];
+        HataT [label="Kimlik doğrulama başarısız", shape=box, color=red];
+        Bekle [label="Sonuç hazır değil", shape=box, color=orange];
+        Yok [label="Tahlil bulunamadı", shape=box, color=orange];
+    }
+
+    // Ana Menü bağlantıları
+    Menu -> KimlikR [label="1"];
+    Menu -> KimlikT [label="2"];
+
+    // Randevu modülü bağlantıları
+    KimlikR -> Poliklinik [label="Doğru"];
+    KimlikR -> HataR [label="Yanlış"];
+    Poliklinik -> Doktor;
+    Doktor -> Saatler;
+    Saatler -> Onay;
+    Onay -> SMS [label="Onaylandı"];
+    Onay -> HataR [label="Başarısız"];
+
+    // Tahlil modülü bağlantıları
+    KimlikT -> TahlilVar [label="Doğru"];
+    KimlikT -> HataT [label="Yanlış"];
+    TahlilVar -> SonucHazir [label="Var"];
+    TahlilVar -> Yok [label="Yok"];
+    SonucHazir -> Goruntule [label="Hazır"];
+    SonucHazir -> Bekle [label="Bekle"];
+    Goruntule -> PDF;
+}
