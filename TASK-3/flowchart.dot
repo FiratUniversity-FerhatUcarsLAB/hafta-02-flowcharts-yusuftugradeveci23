@@ -1,0 +1,72 @@
+digraph HastaneSistemi {
+    rankdir=TB;
+    node [shape=box, style=rounded, width=3];
+
+    // Başla ve Bitir
+    Basla [label="BAŞLA", shape=ellipse, style=filled, fillcolor=lightblue];
+    Bitir [label="BİTİR", shape=ellipse, style=filled, fillcolor=lightgreen];
+
+    // Ana Menü
+    Menu [label="Ana Menü\n1 - Randevu Al\n2 - Tahlil Sonucu Gör", shape=diamond, style=filled, fillcolor=lightgray];
+
+    // -------- Modül 1: Randevu Alma --------
+    subgraph cluster_randevu {
+        label="Modül 1: Randevu Alma";
+        style=dashed;
+        color=gray;
+
+        KimlikR [label="Kimlik Doğrulama", shape=diamond];
+        Poliklinik [label="Poliklinik Seçimi"];
+        Doktor [label="Doktor Listesi"];
+        Saatler [label="Uygun Saatleri Göster"];
+        Onay [label="Randevu Onayı", shape=diamond];
+        SMS [label="SMS Gönder"];
+        HataR [label="Kimlik doğrulama başarısız", color=red];
+
+        KimlikR -> Poliklinik [label="Doğru"];
+        KimlikR -> HataR [label="Yanlış"];
+        Poliklinik -> Doktor;
+        Doktor -> Saatler;
+        Saatler -> Onay;
+        Onay -> SMS [label="Onaylandı"];
+        SMS -> Bitir;
+        Onay -> HataR [label="Başarısız"];
+        HataR -> Bitir;
+    }
+
+    // -------- Modül 2: Tahlil Sonuçları --------
+    subgraph cluster_tahlil {
+        label="Modül 2: Tahlil Sonuçları";
+        style=dashed;
+        color=gray;
+
+        KimlikT [label="Kimlik Doğrulama", shape=diamond];
+        TahlilVar [label="Tahlil Var mı?", shape=diamond];
+        SonucHazir [label="Sonuç Hazır mı?", shape=diamond];
+        Goruntule [label="Sonucu Görüntüle"];
+        PDF [label="PDF İndir"];
+        Bekle [label="Sonuç hazır değil", color=orange];
+        Yok [label="Tahlil bulunamadı", color=orange];
+        HataT [label="Kimlik doğrulama başarısız", color=red];
+
+        KimlikT -> TahlilVar [label="Doğru"];
+        KimlikT -> HataT [label="Yanlış"];
+        TahlilVar -> SonucHazir [label="Var"];
+        TahlilVar -> Yok [label="Yok"];
+        SonucHazir -> Goruntule [label="Hazır"];
+        SonucHazir -> Bekle [label="Bekle"];
+        Goruntule -> PDF;
+        PDF -> Bitir;
+        Bekle -> Bitir;
+        Yok -> Bitir;
+        HataT -> Bitir;
+    }
+
+    // Ana Menü ile modülleri bağlama
+    Basla -> Menu;
+    Menu -> KimlikR [label="1"];
+    Menu -> KimlikT [label="2"];
+
+    // Modülleri hizalama
+    { rank=same; KimlikR; KimlikT }
+}
