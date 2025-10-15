@@ -1,6 +1,5 @@
 Yusuf Tuğra Deveci     Öğrenci No:250541095
 
-sistemin kısa açıklaması (maks. 5-6 satır)
 Bu proje, bir öğrencinin ders kayıt sürecini modelleyen bir algoritmadır.
 Sistem, öğrenci numarası ve şifre ile giriş yaparak başlar.
 Öğrenci, sistemdeki dersleri görüntüleyebilir, ders seçimi veya silme işlemi yapabilir.
