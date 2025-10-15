@@ -1,0 +1,36 @@
+digraph E_Ticaret_Sistemi {
+    rankdir=TB; // Yukarıdan aşağıya (Top to Bottom)
+    node [shape=rectangle, style=rounded, fontname="Arial"];
+
+    BASLA [label="BAŞLA", shape=ellipse];
+    GIRIS [label="Kullanıcı Girişi"];
+    KONTROL [label="Giriş Bilgileri Doğru mu?", shape=diamond];
+    ANA_SAYFA [label="Ana Sayfaya Yönlendir"];
+    KATEGORI [label="Ürün Kategorilerini Görüntüle"];
+    URUN_SEC [label="Ürün Seç ve Sepete Ekle"];
+    STOK [label="Stok Yeterli mi?", shape=diamond];
+    SEPET [label="Sepeti Görüntüle"];
+    INDIRIM [label="İndirim Kodu Girildi mi?", shape=diamond];
+    INDIRIM_UYGULA [label="İndirim Uygula"];
+    KARGO [label="Kargo Ücreti Hesapla"];
+    ODEME [label="Ödeme Bilgilerini Gir"];
+    ODEME_KONTROL [label="Ödeme Onaylandı mı?", shape=diamond];
+    ODEME_BASARILI [label="Sipariş Tamamlandı"];
+    BITIR [label="BİTİR", shape=ellipse];
+
+    // Akış bağlantıları
+    BASLA -> GIRIS -> KONTROL;
+    KONTROL -> ANA_SAYFA [label="Evet"];
+    KONTROL -> BASLA [label="Hayır"];
+    ANA_SAYFA -> KATEGORI -> URUN_SEC -> STOK;
+    STOK -> SEPET [label="Evet"];
+    STOK -> KATEGORI [label="Hayır"];
+    SEPET -> INDIRIM;
+    INDIRIM -> INDIRIM_UYGULA [label="Evet"];
+    INDIRIM -> KARGO [label="Hayır"];
+    INDIRIM_UYGULA -> KARGO;
+    KARGO -> ODEME -> ODEME_KONTROL;
+    ODEME_KONTROL -> ODEME_BASARILI [label="Evet"];
+    ODEME_KONTROL -> ODEME [label="Hayır"];
+    ODEME_BASARILI -> BITIR;
+}
